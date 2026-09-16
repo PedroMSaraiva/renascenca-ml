@@ -1,0 +1,8 @@
+curl_cffi
+pandas
+pyarrow
+matplotlib
+seaborn
+numpy
+notebook
+ipykernel

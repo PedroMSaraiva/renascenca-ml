@@ -1,0 +1,437 @@
+<!doctype html>
+<title>Dicionário TSE</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --ink:#17212b;
+  --ink-soft:#4a5560;
+  --paper:#eef1ef;
+  --surface:#ffffff;
+  --accent:#1f5c4a;
+  --accent-soft:#e4ece8;
+  --gold:#8a5a12;
+  --gold-soft:#f3e6d0;
+  --line:#d7ddda;
+  --code-bg:#f2f0e8;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ink:#e7ece9;
+    --ink-soft:#a7b2ac;
+    --paper:#12181a;
+    --surface:#182120;
+    --accent:#6fbfa2;
+    --accent-soft:#1c2b26;
+    --gold:#d6a85a;
+    --gold-soft:#2a2114;
+    --line:#2a3432;
+    --code-bg:#1c2321;
+  }
+}
+:root[data-theme="dark"]{
+  --ink:#e7ece9;
+  --ink-soft:#a7b2ac;
+  --paper:#12181a;
+  --surface:#182120;
+  --accent:#6fbfa2;
+  --accent-soft:#1c2b26;
+  --gold:#d6a85a;
+  --gold-soft:#2a2114;
+  --line:#2a3432;
+  --code-bg:#1c2321;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:"IBM Plex Sans",system-ui,sans-serif;
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3{font-family:"Source Serif 4",Georgia,serif;text-wrap:balance;color:var(--ink);margin:0}
+code,.mono{font-family:"IBM Plex Mono",ui-monospace,monospace}
+
+.masthead{
+  border-bottom:1px solid var(--line);
+  background:var(--surface);
+  padding-block:2.4rem 1.8rem;
+}
+.masthead-inner{max-width:78rem;margin:0 auto;padding-inline:clamp(16px,4vw,40px);}
+.eyebrow{
+  font-family:"IBM Plex Mono",monospace;
+  font-size:.72rem;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--accent);
+  display:flex;gap:.6em;align-items:center;
+  margin-bottom:.9rem;
+}
+.eyebrow::before{content:"";width:1.6em;height:1px;background:var(--accent);display:inline-block}
+h1{font-size:clamp(1.9rem,4vw,2.7rem);font-weight:600;letter-spacing:-.01em}
+.subhead{color:var(--ink-soft);max-width:46rem;margin-top:.9rem;font-size:1.02rem}
+.chip-row{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.4rem}
+.chip{
+  font-family:"IBM Plex Mono",monospace;font-size:.72rem;
+  border:1px solid var(--line);border-radius:99px;
+  padding:.32em .85em;color:var(--ink-soft);
+}
+.chip-verified{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+
+.layout{max-width:78rem;margin:0 auto;padding-inline:clamp(16px,4vw,40px);display:grid;grid-template-columns:220px 1fr;gap:clamp(20px,4vw,56px);padding-block:2.4rem 5rem}
+@media (max-width:860px){.layout{grid-template-columns:1fr}}
+
+nav.toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 1.2rem);align-self:start;font-size:.86rem}
+@media (max-width:860px){nav.toc{position:static;border:1px solid var(--line);border-radius:10px;padding:.9rem 1rem;background:var(--surface)}}
+nav.toc .toc-label{font-family:"IBM Plex Mono",monospace;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:.7rem}
+nav.toc ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.15rem;counter-reset:tocnum}
+nav.toc a{
+  counter-increment:tocnum;
+  display:flex;gap:.6em;text-decoration:none;color:var(--ink-soft);
+  padding:.32rem .1rem;border-left:2px solid transparent;padding-left:.6rem;
+}
+nav.toc a::before{content:counter(tocnum,decimal-leading-zero);font-family:"IBM Plex Mono",monospace;color:var(--gold);font-size:.78rem}
+nav.toc a:hover{color:var(--ink);border-left-color:var(--accent)}
+
+main{min-width:0}
+section.block{padding-block:2.2rem;border-bottom:1px solid var(--line);scroll-margin-top:1.5rem}
+section.block:last-child{border-bottom:none}
+.block-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:.7rem 1rem;margin-bottom:.4rem}
+.block-num{font-family:"IBM Plex Mono",monospace;color:var(--gold);font-size:1rem}
+.block-head h2{font-size:1.45rem;font-weight:600}
+.dataset-name{font-family:"IBM Plex Mono",monospace;font-size:.82rem;color:var(--accent);background:var(--accent-soft);padding:.15em .6em;border-radius:5px}
+.meta-row{display:flex;flex-wrap:wrap;gap:.5rem 1.4rem;margin:.8rem 0 1.2rem;font-size:.82rem;color:var(--ink-soft)}
+.meta-row b{color:var(--ink);font-weight:500}
+p.desc{max-width:52rem;color:var(--ink-soft);margin:.3rem 0 1.3rem}
+p.desc a{color:var(--accent)}
+
+.table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:8px}
+table{border-collapse:collapse;width:100%;min-width:560px;font-size:.86rem}
+thead th{
+  text-align:left;font-family:"IBM Plex Mono",monospace;font-size:.68rem;
+  letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);
+  background:var(--code-bg);padding:.6em .9em;border-bottom:1px solid var(--line);
+  position:sticky;top:0;
+}
+tbody td{padding:.55em .9em;border-bottom:1px solid var(--line);vertical-align:top}
+tbody tr:last-child td{border-bottom:none}
+td.field{font-family:"IBM Plex Mono",monospace;font-size:.8rem;color:var(--accent);white-space:nowrap}
+td.type{font-family:"IBM Plex Mono",monospace;font-size:.76rem;color:var(--ink-soft);white-space:nowrap}
+
+.ml-box{
+  margin-top:1.1rem;background:var(--gold-soft);border:1px solid var(--line);
+  border-left:3px solid var(--gold);border-radius:0 8px 8px 0;padding:.9rem 1.1rem;
+}
+.ml-box .ml-label{font-family:"IBM Plex Mono",monospace;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:.4rem}
+.ml-box ul{margin:.2rem 0 0;padding-left:1.1rem}
+.ml-box li{margin:.15rem 0}
+
+.target-box{
+  background:var(--accent-soft);border:1px solid var(--line);border-left:3px solid var(--accent);
+  border-radius:0 8px 8px 0;padding:1rem 1.2rem;margin-top:1.2rem;
+}
+.target-box .ml-label{color:var(--accent);font-family:"IBM Plex Mono",monospace;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.4rem}
+
+.foot{max-width:78rem;margin:0 auto;padding:2rem clamp(16px,4vw,40px) 3rem;color:var(--ink-soft);font-size:.82rem;border-top:1px solid var(--line)}
+.foot a{color:var(--accent)}
+[hidden]{display:none!important}
+</style>
+
+<div class="masthead">
+  <div class="masthead-inner">
+    <div class="eyebrow">Portal de Dados Abertos do TSE</div>
+    <h1>Dicionário de dados para previsão eleitoral</h1>
+    <p class="subhead">Mapeamento inicial dos conjuntos de dados públicos do Tribunal Superior Eleitoral relevantes para treinar um modelo que prevê se um candidato será eleito — campos, granularidade, formato de acesso e ideias de features por base.</p>
+    <div class="chip-row">
+      <span class="chip">dadosabertos.tse.jus.br</span>
+      <span class="chip">cdn.tse.jus.br/estatistica/sead/odsele</span>
+      <span class="chip">CSV ; latin-1 ; ; separado</span>
+      <span class="chip">granularidade: candidato-eleição</span>
+      <span class="chip chip-verified">✓ verificado contra dados reais — 2024 / AC</span>
+    </div>
+  </div>
+</div>
+
+<div class="layout">
+  <nav class="toc">
+    <div class="toc-label">Bases mapeadas</div>
+    <ol>
+      <li><a href="#candidaturas">Candidaturas</a></li>
+      <li><a href="#bens">Bens de candidato</a></li>
+      <li><a href="#resultados">Votação e resultado</a></li>
+      <li><a href="#contas">Prestação de contas</a></li>
+      <li><a href="#filiacao">Filiação partidária</a></li>
+      <li><a href="#eleitorado">Perfil do eleitorado</a></li>
+      <li><a href="#redes">Redes e propostas</a></li>
+      <li><a href="#montagem">Montagem do dataset</a></li>
+    </ol>
+  </nav>
+
+  <main>
+
+    <section class="block" id="candidaturas">
+      <div class="block-head">
+        <span class="block-num">01</span>
+        <h2>Candidaturas</h2>
+        <span class="dataset-name">consulta_cand_AAAA</span>
+      </div>
+      <div class="meta-row">
+        <span><b>Grupo no portal:</b> Candidatos</span>
+        <span><b>Granularidade:</b> 1 linha por candidatura</span>
+        <span><b>Cobertura:</b> 1994 → atual</span>
+        <span><b>Periodicidade:</b> por eleição</span>
+      </div>
+      <p class="desc">Ficha de registro de candidatura: quem se candidatou, a quê, por qual partido/coligação, e o desfecho da candidatura (deferida, eleita, não eleita, cassada). É a espinha dorsal do dataset — todas as outras bases se juntam a ela por <code>SQ_CANDIDATO</code>.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr></thead>
+          <tbody>
+            <tr><td class="field">SQ_CANDIDATO</td><td class="type">int (chave)</td><td>Identificador único da candidatura na eleição — chave de junção com bens, contas e votação.</td></tr>
+            <tr><td class="field">NR_CANDIDATO / NM_CANDIDATO</td><td class="type">int / texto</td><td>Número de urna e nome completo.</td></tr>
+            <tr><td class="field">DS_CARGO</td><td class="type">categórico</td><td>Cargo disputado (prefeito, vereador, deputado estadual, senador...).</td></tr>
+            <tr><td class="field">SG_UF / SG_UE / NM_UE</td><td class="type">categórico</td><td>Unidade federativa e unidade eleitoral (município ou estado).</td></tr>
+            <tr><td class="field">NR_PARTIDO / SG_PARTIDO</td><td class="type">categórico</td><td>Partido pelo qual concorre.</td></tr>
+            <tr><td class="field">NM_COLIGACAO / DS_COMPOSICAO_COLIGACAO</td><td class="type">texto</td><td>Coligação e partidos que a compõem — proxy de força de aliança.</td></tr>
+            <tr><td class="field">DS_GENERO</td><td class="type">categórico</td><td>Gênero declarado.</td></tr>
+            <tr><td class="field">DS_GRAU_INSTRUCAO</td><td class="type">categórico</td><td>Escolaridade declarada.</td></tr>
+            <tr><td class="field">DS_ESTADO_CIVIL</td><td class="type">categórico</td><td>Estado civil declarado.</td></tr>
+            <tr><td class="field">DS_COR_RACA</td><td class="type">categórico</td><td>Cor/raça autodeclarada.</td></tr>
+            <tr><td class="field">DS_OCUPACAO</td><td class="type">categórico</td><td>Ocupação declarada.</td></tr>
+            <tr><td class="field">DT_NASCIMENTO</td><td class="type">data</td><td>Idade calculável na data da eleição.</td></tr>
+            <tr><td class="field">NR_TURNO</td><td class="type">int</td><td>1º ou 2º turno.</td></tr>
+            <tr><td class="field">NR_CPF_CANDIDATO</td><td class="type">texto</td><td><b>Mascarado desde 2024</b> (Resolução TSE nº 23.729/2024) — vem sempre <code>-4</code> no arquivo real. Não use como chave.</td></tr>
+            <tr><td class="field">NR_TITULO_ELEITORAL_CANDIDATO</td><td class="type">texto (chave)</td><td>Identificador <b>estável entre eleições</b> de fato preenchido — use para juntar candidaturas do mesmo indivíduo em pleitos diferentes (histórico/incumbência) e para casar com a base de filiação partidária.</td></tr>
+            <tr><td class="field">CD_SIT_TOT_TURNO / DS_SIT_TOT_TURNO</td><td class="type">categórico</td><td><b>Variável alvo.</b> Situação de totalização: eleito, eleito por média/QP, não eleito, suplente, etc.</td></tr>
+            <tr><td class="field">CD_SITUACAO_CANDIDATURA / DS_SITUACAO_CANDIDATURA</td><td class="type">categórico</td><td>Situação do registro (deferido, indeferido, cassado, renúncia) — filtrar candidaturas inválidas antes de treinar.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="target-box">
+        <div class="ml-label">Variável alvo</div>
+        Derive um binário <code>eleito = 1</code> quando <code>DS_SIT_TOT_TURNO</code> ∈ {ELEITO, ELEITO POR QP, ELEITO POR MÉDIA}, senão <code>0</code>. Trate suplentes e candidaturas indeferidas/cassadas como casos à parte (não são "não eleito" no mesmo sentido).
+      </div>
+      <div class="ml-box">
+        <div class="ml-label">Ideias de feature</div>
+        <ul>
+          <li>Incumbência não vem pronta: não existe campo <code>ST_REELEICAO</code> no layout atual (verificado — ausente no arquivo de 2024). Construa-a comparando <code>NR_CPF_CANDIDATO</code> entre o pleito atual e o anterior no mesmo cargo/UE.</li>
+          <li>Escolaridade, idade, gênero, raça/cor como covariáveis demográficas.</li>
+          <li>Tamanho e composição da coligação (nº de partidos coligados) como proxy de capital político.</li>
+          <li>Cargo e UF/UE como estratos — o modelo provavelmente precisa ser condicional ao tipo de eleição (proporcional vs. majoritária).</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="block" id="bens">
+      <div class="block-head">
+        <span class="block-num">02</span>
+        <h2>Bens de candidato</h2>
+        <span class="dataset-name">bem_candidato_AAAA</span>
+      </div>
+      <div class="meta-row">
+        <span><b>Granularidade:</b> 1 linha por bem declarado</span>
+        <span><b>Junção:</b> <code>SQ_CANDIDATO</code></span>
+      </div>
+      <p class="desc">Declaração de bens patrimoniais feita no registro de candidatura. Vários bens por candidato — precisa ser agregada (soma) antes de juntar à ficha de candidatura.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr></thead>
+          <tbody>
+            <tr><td class="field">SQ_CANDIDATO</td><td class="type">int</td><td>Chave de junção.</td></tr>
+            <tr><td class="field">CD_TIPO_BEM_CANDIDATO / DS_TIPO_BEM_CANDIDATO</td><td class="type">categórico</td><td>Tipo do bem (imóvel, veículo, aplicação financeira...).</td></tr>
+            <tr><td class="field">DS_BEM_CANDIDATO</td><td class="type">texto livre</td><td>Descrição do bem — texto não estruturado, útil só em NLP exploratório.</td></tr>
+            <tr><td class="field">VR_BEM_CANDIDATO</td><td class="type">decimal (vírgula)</td><td>Valor declarado em R$. Atenção: separador decimal é vírgula.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="ml-box">
+        <div class="ml-label">Ideias de feature</div>
+        <ul>
+          <li><code>patrimonio_total</code> = soma de <code>VR_BEM_CANDIDATO</code> por <code>SQ_CANDIDATO</code>.</li>
+          <li><code>qtd_bens</code> e diversidade de <code>DS_TIPO_BEM_CANDIDATO</code> como proxy de complexidade patrimonial.</li>
+          <li>Log-transformar o valor — distribuição é fortemente assimétrica.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="block" id="resultados">
+      <div class="block-head">
+        <span class="block-num">03</span>
+        <h2>Votação e resultado</h2>
+        <span class="dataset-name">votacao_candidato_munzona_AAAA</span>
+      </div>
+      <div class="meta-row">
+        <span><b>Grupo no portal:</b> Resultados</span>
+        <span><b>Granularidade:</b> 1 linha por candidato × município × zona × turno</span>
+      </div>
+      <p class="desc">Votos nominais recebidos, quebrados por município e zona eleitoral. Some por <code>SQ_CANDIDATO</code> para obter o total de votos da candidatura. Complementar: <code>detalhe_votacao_munzona</code> (comparecimento/abstenção/votos nulos e brancos por zona) e <code>votacao_partido_munzona</code> (votos de legenda).</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr></thead>
+          <tbody>
+            <tr><td class="field">SQ_CANDIDATO</td><td class="type">int</td><td>Chave de junção.</td></tr>
+            <tr><td class="field">NR_TURNO</td><td class="type">int</td><td>1º ou 2º turno.</td></tr>
+            <tr><td class="field">SG_UF / NM_MUNICIPIO / NR_ZONA</td><td class="type">categórico</td><td>Localização do resultado — permite features geográficas (força por região).</td></tr>
+            <tr><td class="field">QT_VOTOS_NOMINAIS</td><td class="type">int</td><td>Votos recebidos naquela zona/turno — <b>somar</b> para total da candidatura.</td></tr>
+            <tr><td class="field">DS_SIT_TOT_TURNO</td><td class="type">categórico</td><td>Repete a situação final — útil para checagem cruzada com a base de candidaturas.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="ml-box">
+        <div class="ml-label">Cuidado com vazamento de dados (leakage)</div>
+        <ul>
+          <li>O total de votos e o resultado do 2º turno só existem <i>depois</i> da eleição — não são features válidas para prever o 1º turno; use-as no máximo como alvo auxiliar ou para modelar o 2º turno separadamente.</li>
+          <li>Para um modelo verdadeiramente preditivo (pré-eleição), a base de votação serve para construir o histórico do candidato em pleitos <i>anteriores</i> (ex.: votos obtidos na eleição passada), não da eleição corrente.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="block" id="contas">
+      <div class="block-head">
+        <span class="block-num">04</span>
+        <h2>Prestação de contas</h2>
+        <span class="dataset-name">prestacao_de_contas_eleitorais_candidatos_AAAA</span>
+      </div>
+      <div class="meta-row">
+        <span><b>Grupo no portal:</b> Prestação de Contas Eleitorais</span>
+        <span><b>Granularidade:</b> 1 linha por receita/despesa declarada</span>
+      </div>
+      <p class="desc">Arrecadação e gastos de campanha por candidato/comitê, com doadores/fornecedores identificados. O zip nacional é pesado (~1,3 GB em 2024) e traz, por UF, quatro CSVs empacotados juntos: <code>receitas_candidatos_AAAA_UF.csv</code>, <code>receitas_candidatos_doador_originario_AAAA_UF.csv</code>, <code>despesas_contratadas_candidatos_AAAA_UF.csv</code> e <code>despesas_pagas_candidatos_AAAA_UF.csv</code>.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr></thead>
+          <tbody>
+            <tr><td class="field">SQ_CANDIDATO</td><td class="type">int</td><td>Chave de junção com a ficha de candidatura.</td></tr>
+            <tr><td class="field">DS_ORIGEM_RECEITA / DS_FONTE_RECEITA</td><td class="type">categórico</td><td>Origem do recurso: fundo partidário, fundo eleitoral (FEFC), recursos próprios, doação de pessoa física/jurídica.</td></tr>
+            <tr><td class="field">VR_RECEITA</td><td class="type">decimal</td><td>Valor em R$ (arquivo de receitas) — feature de maior poder preditivo historicamente. Nos arquivos de despesa os campos equivalentes são <code>VR_DESPESA_CONTRATADA</code> e <code>VR_PAGTO_DESPESA</code>.</td></tr>
+            <tr><td class="field">DS_ESPECIE_RECEITA</td><td class="type">categórico</td><td>Espécie da receita (recurso financeiro/estimável) — nome real do campo, não <code>DS_ESPECIE_RECURSO</code>.</td></tr>
+            <tr><td class="field">NR_CPF_CNPJ_DOADOR / NM_DOADOR / CD_CNAE_DOADOR</td><td class="type">texto / categórico</td><td>Identificação do doador — dá para cruzar com CNPJ de empresas e setor econômico.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="ml-box">
+        <div class="ml-label">Ideias de feature</div>
+        <ul>
+          <li><code>total_arrecadado</code>, <code>total_gasto</code>, <code>pct_fundo_eleitoral</code>, <code>pct_recursos_proprios</code> — literatura de ciência política aponta gasto de campanha como um dos preditores mais fortes de vitória.</li>
+          <li><code>qtd_doadores_distintos</code>, <code>pct_receita_pessoa_juridica</code> a partir do CNAE/CPF-CNPJ do doador.</li>
+          <li><code>gasto_por_voto_esperado</code> exige combinar com histórico — cuidado para não usar dado pós-eleição.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="block" id="filiacao">
+      <div class="block-head">
+        <span class="block-num">05</span>
+        <h2>Filiação partidária</h2>
+        <span class="dataset-name">filiados_AAAAMMDD_UF</span>
+      </div>
+      <div class="meta-row">
+        <span><b>Grupo no portal:</b> Filiação Partidária</span>
+        <span><b>Granularidade:</b> 1 linha por filiado</span>
+      </div>
+      <p class="desc">Cadastro nacional de filiados a partidos, com data de filiação. Junta-se por CPF/título (quando disponível na base do candidato) para derivar tempo de filiação partidária.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr></thead>
+          <tbody>
+            <tr><td class="field">NR_CPF / NR_TITULO_ELEITORAL_FILIADO</td><td class="type">texto</td><td>Chave de junção com o eleitor/candidato.</td></tr>
+            <tr><td class="field">SG_PARTIDO</td><td class="type">categórico</td><td>Partido de filiação.</td></tr>
+            <tr><td class="field">DT_FILIACAO</td><td class="type">data</td><td>Permite calcular <code>tempo_de_filiacao</code> até a data-limite da eleição.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="ml-box">
+        <div class="ml-label">Ideias de feature</div>
+        <ul>
+          <li><code>tempo_filiacao_meses</code> — filiação recente costuma sinalizar candidatura "de legenda", oposto de base consolidada no partido.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="block" id="eleitorado">
+      <div class="block-head">
+        <span class="block-num">06</span>
+        <h2>Perfil do eleitorado</h2>
+        <span class="dataset-name">perfil_eleitorado_AAAA</span>
+      </div>
+      <div class="meta-row">
+        <span><b>Grupo no portal:</b> Eleitorado</span>
+        <span><b>Granularidade:</b> agregada por município/zona/seção, faixa etária, gênero, escolaridade</span>
+      </div>
+      <p class="desc">Não é ligada ao candidato — descreve o eleitorado da unidade eleitoral. Serve para contextualizar a disputa (tamanho do colégio eleitoral, perfil demográfico do município) e para normalizar votos (% do eleitorado, não só contagem bruta).</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr></thead>
+          <tbody>
+            <tr><td class="field">SG_UF / NM_MUNICIPIO / NR_ZONA</td><td class="type">categórico</td><td>Chave geográfica para juntar com a base de votação.</td></tr>
+            <tr><td class="field">DS_FAIXA_ETARIA, DS_GENERO, DS_GRAU_ESCOLARIDADE</td><td class="type">categórico</td><td>Dimensões demográficas do eleitorado, não do candidato.</td></tr>
+            <tr><td class="field">QT_ELEITORES</td><td class="type">int</td><td>Contagem de eleitores no cruzamento de dimensões (nome real do campo, não <code>QT_ELEITORES_PERFIL</code>) — some para obter o eleitorado total do município/zona.</td></tr>
+            <tr><td class="field">QT_ELEITORES_BIOMETRIA / QT_ELEITORES_DEFICIENCIA</td><td class="type">int</td><td>Recortes adicionais do eleitorado disponíveis no mesmo arquivo.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="block" id="redes">
+      <div class="block-head">
+        <span class="block-num">07</span>
+        <h2>Redes sociais e propostas</h2>
+        <span class="dataset-name">rede_social_candidato · proposta_governo</span>
+      </div>
+      <div class="meta-row">
+        <span><b>Granularidade:</b> 1 linha por candidato × rede (ou por candidato, no caso de propostas)</span>
+      </div>
+      <p class="desc">Adicionado a partir de 2020: URLs de redes sociais declaradas e, quando aplicável, o texto do plano de governo (PDF anexado ao registro — requer extração à parte). Baixo custo de coleta, potencial para features de presença digital.</p>
+      <div class="ml-box">
+        <div class="ml-label">Ideias de feature</div>
+        <ul>
+          <li><code>qtd_redes_declaradas</code> como proxy de profissionalização de campanha.</li>
+          <li>Texto da proposta de governo é fonte para NLP (comprimento, temas via tópicos) — trabalho adicional de parsing de PDF, não vem estruturado.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="block" id="montagem">
+      <div class="block-head">
+        <span class="block-num">08</span>
+        <h2>Como montar o dataset de treino</h2>
+      </div>
+      <p class="desc">Sequência recomendada para chegar a uma tabela <code>1 linha = 1 candidatura</code> pronta para features.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Passo</th><th>Base</th><th>Operação</th></tr></thead>
+          <tbody>
+            <tr><td class="field">1</td><td class="type">consulta_cand</td><td>Filtrar <code>DS_SITUACAO_CANDIDATURA</code> = deferido/apto; esta é a tabela-fato, 1 linha por <code>SQ_CANDIDATO</code>.</td></tr>
+            <tr><td class="field">2</td><td class="type">bem_candidato</td><td>Agregar (soma/contagem) por <code>SQ_CANDIDATO</code> e fazer <code>LEFT JOIN</code>.</td></tr>
+            <tr><td class="field">3</td><td class="type">prestacao_contas</td><td>Agregar receitas e despesas por <code>SQ_CANDIDATO</code> e fazer <code>LEFT JOIN</code>.</td></tr>
+            <tr><td class="field">4</td><td class="type">filiados</td><td>Casar por <code>NR_TITULO_ELEITORAL_CANDIDATO</code> (CPF vem mascarado), calcular tempo de filiação, <code>LEFT JOIN</code>.</td></tr>
+            <tr><td class="field">5</td><td class="type">eleições anteriores</td><td>Repetir passos 1-4 para o pleito anterior do mesmo candidato (chave: <code>NR_TITULO_ELEITORAL_CANDIDATO</code>, não <code>SQ_CANDIDATO</code>, que muda a cada eleição) para gerar histórico/incumbência real.</td></tr>
+            <tr><td class="field">6</td><td class="type">votacao_candidato_munzona</td><td>Usar <b>apenas</b> do pleito anterior como feature; do pleito atual, apenas para construir/validar o alvo.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="target-box">
+        <div class="ml-label">Nota metodológica</div>
+        O identificador estável entre eleições não é <code>SQ_CANDIDATO</code> (recriado a cada pleito). <code>NR_CPF_CANDIDATO</code> existe como coluna mas vem <b>mascarado (<code>-4</code>) desde 2024</b> por resolução do TSE — confirmado no CSV real de AC, todas as 2.311 linhas. A chave que sobra e de fato funciona é <code>NR_TITULO_ELEITORAL_CANDIDATO</code>.
+      </div>
+      <div class="ml-box">
+        <div class="ml-label">O que a verificação mudou neste dicionário</div>
+        <ul>
+          <li><b>Removido:</b> <code>ST_REELEICAO</code>, <code>NR_IDADE_DATA_POSSE</code>, <code>ST_CANDIDATO_INSERIDO_URNA</code> — não existem no layout 2024 de <code>consulta_cand</code>.</li>
+          <li><b>Corrigido:</b> dataset de contas eleitorais chama-se <code>prestacao_de_contas_eleitorais_candidatos</code>, não <code>receitas_candidatos</code>/<code>prestacao_contas_final</code>; campo é <code>DS_ESPECIE_RECEITA</code>, não <code>DS_ESPECIE_RECURSO</code>.</li>
+          <li><b>Corrigido:</b> perfil do eleitorado usa <code>QT_ELEITORES</code>, não <code>QT_ELEITORES_PERFIL</code>.</li>
+          <li><b>Corrigido (crítico):</b> <code>NR_CPF_CANDIDATO</code> não serve mais como chave — mascarado desde a Resolução TSE nº 23.729/2024. Use <code>NR_TITULO_ELEITORAL_CANDIDATO</code>, que vem preenchido de verdade.</li>
+          <li>Cada pacote traz um <code>leiame*.pdf</code> (encoding Latin-1, <code>;</code> como separador, <code>#NULO</code>/<code>#NE</code> para ausência de dado) — vale ler antes de confiar em qualquer coluna nova.</li>
+          <li>Verificação feita baixando os arquivos reais de <b>2024/AC</b> com <code>scripts/ingest_tse.py</code> e comparando cabeçalho a cabeçalho — ver <code>data/reports/*.md</code>. Campos de bens, votação e coligações bateram 100% com o previsto.</li>
+        </ul>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<div class="foot">
+  Fontes: <a href="https://dadosabertos.tse.jus.br/" target="_blank" rel="noopener">Portal de Dados Abertos do TSE</a> e pacotes em <code>cdn.tse.jus.br/estatistica/sead/odsele</code>. Cada ZIP traz um arquivo "leia-me" (PDF) com o layout oficial e completo das colunas. Os campos de candidatos, bens, votação e prestação de contas listados aqui foram conferidos contra o CSV real de <b>2024/AC</b> em setembro de 2026 (ver <code>scripts/ingest_tse.py</code> e <code>data/reports/</code> no repositório); nomes de coluna ainda podem mudar entre anos — revalide antes de rodar em outra eleição. Nota técnica: os endpoints do TSE ficam atrás de Akamai Bot Manager e bloqueiam clientes HTTP com fingerprint de TLS não-navegador (403 mesmo com User-Agent de browser) — o script usa <code>curl_cffi</code> com <code>impersonate="chrome"</code> para contornar isso.
+</div>

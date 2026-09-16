@@ -1,0 +1,16 @@
+[project]
+name = "renascenca"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "curl-cffi>=0.16.3",
+    "ipykernel>=7.3.0",
+    "matplotlib>=3.11.2",
+    "notebook>=7.6.2",
+    "numpy>=2.5.3",
+    "pandas>=3.0.5",
+    "pyarrow>=25.0.1",
+    "seaborn>=0.13.2",
+]
